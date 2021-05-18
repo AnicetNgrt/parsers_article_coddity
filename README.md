@@ -1,6 +1,8 @@
-# À la découverte des parsers ✂
+![parser_illustré](res/1.png)
 
-## Définition
+*Toutes les illustrations sont de l'auteur.*
+
+# À la découverte des parsers
 
 Un parser est un traducteur. Un programme capable de prendre une information exprimée dans un format A, de la lire, de l'analyser, parfois même de l'enrichir, puis de rendre le tout dans un format B.
 
@@ -8,15 +10,15 @@ Pensez aux langages de programmation, formats de fichiers, protocoles de communi
 
 ## L'objectif
 
-L'idée est de vous montrer comment l'écriture d'un parser relativement simple met en lumière quelques bonnes idées de la programmation orientée fonction, un paradigme complémentaire à l'orienté objet et que beaucoup de programmeurs ne connaissent malheureusement pas.
+Nous réaliserons un parser capable d'identifier une phrase (de façon simplifiée) et de renvoyer tout ses mots. 
 
-En guise de démonstration, nous réaliserons un parser capable d'identifier une phrase (de façon simplifiée) et de renvoyer tout ses mots.
+Nous utiliserons la technique de "recursive descent" pour construire notre parser final, ce qui mettra en lumière quelques bonnes idées de la programmation orientée fonction, un paradigme complémentaire à l'orienté objet et que beaucoup de programmeurs ne connaissent malheureusement pas.
 
 ## Un outil de choix :  Le CoddiScript
 
-Pour écrire notre parser, nous utiliserons le CoddiScript. Un langage fictif conçu spécialement pour vous donner une idée globale de l'implémentation d'un parser.
+Nous utiliserons le CoddiScript. Un langage fictif conçu spécialement pour vous donner une vision haut-niveau de l'implémentation de notre parser.
 
-CoddiScript est haut-niveau, faiblement typé (mais il accepte une documentation des types avec `@typespec`), et accepte que les variables contiennent des fonctions (on dit que le langage a des "first-class functions"). 
+CoddiScript est faiblement typé (mais on peut documenter les types) et accepte que les variables contiennent des fonctions (on dit que le langage a des "first-class functions"). 
 
 Il est inspiré de Javascript et de Python, mais tout ce que je vais vous montrer peut être implémenté dans d'autres langages plus bas niveau et/ou avec des propriétés différentes. Voici un exemple en [Rust](https://github.com/AnicetNgrt/SentenceParserCombinators) et un autre en [Java](https://github.com/AnicetNgrt/parser_combinators).
 
@@ -43,16 +45,19 @@ f(4) // [4, 40, 400]
 
 ## 0. Formule d'une phrase
 
-Pour parser une phrase, il faut déjà être capable de parser ce dont elle est composée, c'est à dire d'**un ou plusieurs mots**, mots composés d'**un ou plusieurs caractères alphanumériques**, le premier commençant par **une majuscule**, le dernier finissant par un **point**, tous séparés d'**un ou plusieurs espaces**. 
+Pour parser une phrase, il faut déjà identifier ce dont elle est composée. Dans notre cas ce sera d'**un ou plusieurs mots**, mots composés d'**un ou plusieurs caractères alphanumériques**, le premier commençant par **une majuscule**, le dernier finissant par un **point**, tous séparés d'**un espace**. 
 
-Ce n'est qu'un exemple donc on va se limiter à ces quelques règles. Mais je vous invite à vous renseigner sur les "parse tree" de vous-même une fois que vous aurez compris tout ce que nous allons faire si vous souhaitez en savoir plus sur la manière dont on pourrait ajouter des règles de grammaire et de syntaxe avancées.
+Nous allons nous limiter à ces quelques règles pour simplifier. Mais si vous souhaitez ajouter des règles de grammaire et de syntaxe avancées (par exemple : sujet, verbe, complément) je vous invite à vous renseigner sur les "parse tree", un outil complémentaire que je ne traiterai pas dans cet article.
+
+Exemple de phrases valides selon nos critères :
 
 ```
-Je suis une    phrase.  -> valide: true, resultat: ["Je", "suis", "une", "phrase"]
-Je.                     -> valide: true, resultat: ["Je"]
-je.                     -> valide: false
-Je                      -> valide: false
-Je suis une phrase .    -> valide: false
+Je suis une phrase.     -> valide, resultat: ["Je", "suis", "une", "phrase"]
+Je.                     -> valide, resultat: ["Je"]
+je.                     -> incorrect
+Je                      -> incorrect
+Je suis une phrase .    -> incorrect
+Je   suis une  phrase.  -> incorrect
 ```
 
 On en déduit la formule pseudo-mathématique d'une "phrase" :
@@ -60,11 +65,12 @@ On en déduit la formule pseudo-mathématique d'une "phrase" :
 ```python
 mot = n*char_alphanum
 mot_maj = char_alphanum_maj + k*char_alphanum
-espacement = n*" "
-phrase = k*(mot + espacement) + mot_maj + "."  
+phrase = mot_maj + k*(char_espacement + mot) + "."  
 
 n entier >= 1, k entier >= 0
 ```
+
+![formule phrase](res/2.png)
 
 Ce qui veut dire qu'on doit pouvoir parser :
 
@@ -81,7 +87,7 @@ Et faire des opérations sur ces parsers :
 
 ## 1. Fonction parser
 
-Comme nous prenons une approche orientée fonction, chaque parser sera une fonction. Ces fonctions renverront le résultat du parsing appliqué au texte donné en entrée.
+Nous prenons une approche orientée fonction, donc chaque parser sera une fonction. Ces fonctions renverront le résultat du parsing appliqué au texte donné en entrée.
 
 ```js
 res = parse_phrase("Ma phrase.")
@@ -108,6 +114,8 @@ parse_phrase("  je ne suis pas une phrase")
 // }
 ```
 
+![sentence parser](res/3.png)
+
 ## 2. Parsers de base
 
 Commençons par parser un unique caractère en le renvoyant en résultat :
@@ -132,9 +140,11 @@ println(res, rem) // ("e", "llo")
 
 ## 3. Fonctions du premier ordre
 
-Maintenant qu'on peut parser la présence d'un caractère, il faut vérifier certaines conditions dessus, par exemple si l'on veut parser un espace alors on doit vérifier que c'est un espace, si l'on veut parser un point, que c'est un point et ainsi de suite...
+Maintenant qu'on peut parser la présence d'un caractère, il faut vérifier certaines conditions dessus, par exemple si l'on veut parser un espace alors on doit regarder si c'est un espace, si l'on veut parser un point, si c'est un point et ainsi de suite...
 
-Notre premier instinct serait de faire une fonction qui parse un caractère puis essaye de valider une condition dessus. Cette condition serait une fonction prenant le caractère en question et renvoyant vrai ou faux. Si la condition passe on renverra le caractère, sinon on aura une exception.
+Notre premier instinct serait de faire une fonction qui parse un caractère puis essaye de valider une condition booléenne dessus. Cette condition serait une fonction prenant le caractère en question et renvoyant vrai ou faux. Si la condition passe on renverra le caractère, sinon on aura une exception.
+
+![parse char cond](res/4.png)
 
 ```js
 // Parser vérifiant la présence d'un caractère validant une condition
@@ -164,14 +174,14 @@ println(res, rem) // (".", "suite")
 
 (res, rem) = parse_dot("suite")
 // ParseException{
-//      reason: "unexpected character.",
+//      reason: "Unexpected character",
 //      input: "s"
 // }
 ```
 
-Pour `parse_char_cond` on parle de "fonction du premier ordre", c'est à dire une fonction qui prend d'autres fonctions en paramètre. C'est très utile car ça offre une forme de polymorphisme. La fonction `parse_char_cond` peut être réutilisée avec pleins de conditions différentes pour enrichir le comportement du parser sans dupliquer de code.
+Pour `parse_char_cond` on parle de "fonction du premier ordre", c'est à dire une fonction qui prend d'autres fonctions en paramètre. C'est très utile car ça permet de ne pas dupliquer de code entres les différents parsers conditionnels qu'on va devoir implémenter.
 
-## 4. Redondances
+## 4. Functors
 
 Le code écrit jusqu'ici n'est pas si bien. Imaginez un instant que vous vouliez ensuite faire un parser qui valide une condition sur autre chose qu'un caractère. Par exemple si maintenant vous vouliez parser un mot et en plus valider que ce mot a une majuscule, alors vous devriez réécrire une logique très semblable mais en remplaçant `parse_char` par `parse_word` (supposons qu'elle existe).
 
@@ -192,7 +202,7 @@ Mais on peut faire encore mieux.
 
 Plus tard, le parser de phrase va utiliser `parse_cond` de la même manière plusieurs fois. Par exemple pour chaque caractère de chaque mot il va appeler `parse_cond` avec le même parser `parse_char` et la même condition `is_alphanumeric`. Et même si le temps nécessaire à l'envoi d'une fonction dans une autre est négligeable (pointeur de fonction => entier positif ~= 4 octets), si l'on fait ça sur des textes de plusieurs millions de mots, on va répéter des millions de fois cet appel (on souhaite éviter les feux de datacenters à Strasbourg).
 
-Pour résoudre ce problème nous n'allons plus faire un parser qui prend un autre parser et une condition comme le fait `parse_cond`, mais une fonction qui va construire des variantes de `parse_cond` qu'on pourra appeler ensuite sans repasser tous les arguments.
+Pour résoudre ce problème nous n'allons pas faire un parser, mais une fonction qui va construire des variantes de `parse_cond` qu'on pourra appeler ensuite sans repasser tous les arguments.
 
 ```js
 // Comme le montre le typespec, cond_parser renvoie une fonction.
@@ -211,10 +221,36 @@ fun cond_parser(parser, cond) {
 }
 ```
 
+![constructeur de parser conditionnel](res/5.png)
+
 Lorsqu'une fonction en renvoie une autre on parle de "functor". On peut voir ça comme l'équivalent d'une "factory" en orienté objet.
 
-```js
-fun is_dot(c) 
+Donc maintenant on peut réécrire notre parser de points comme ceci :
 
-dot_parser = cond_parser(is_dot, )
+```js
+fun is_dot(c) { return c == "." }
+
+dot_parser = cond_parser(parse_char, is_dot)
+
+dot_parser(".super") // (".", "super")
 ```
+
+Et pour parser les autres types de caractères qui nous intéressent :
+
+```js
+import { is_whitespace, is_alphanum, is_uppercase } from "std:chars";
+// La plupart des langages ont des fonctions similaires dans leur librairie standard.
+
+space_parser = cond_parser(parse_char, is_whitespace)
+alphanum_parser = cond_parser(parse_char, is_alphanum)
+
+maj_alphanum_parser = cond_parser(alphanum_parser, is_uppercase)
+```
+
+Vous voyez qu'avec cette technique nos parsers sont devenus très facilement composables. Regardez comme on utilise `alphanum_parser` pour construire `maj_alphanum_parser`. Ce qui forme une chaîne de parsers `parse_char -> alphanum_parser -> maj_alphanum_parser` où on ajoute simplement une nouvelle condition à chaque étape. Donc tout se compose très naturellement.
+
+## 5. Parsers répétés
+
+Nous allons maintenant créer un functor qui, à partir d'un parser A, créé un parser B répétant A autant de fois que possible jusqu'à ce qu'il échoue, renvoyant alors la liste de tous les résultats accumulés de A. Ce qui nous donnera la possibilité de répéter un parser zéro fois ou plus. Par exemple pour parser les caractères après la majuscule, comme indiqué dans la formule de départ.
+
+![parsers répétés](res/6.png)

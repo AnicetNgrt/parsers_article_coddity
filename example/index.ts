@@ -86,7 +86,11 @@ const zero_or_more = <R>(parser: Parser<R>) => {
     }
 }
 
-try { console.log(zero_or_more(parse_alphanum)("hello")); } catch (e) { console.error(e) };
+// try {
+//     console.log(zero_or_more(parse_alphanum)("hello"));
+// } catch (e) {
+//     console.error(e)
+// };
 
 const one_or_more = <R>(parser: Parser<R>) => {
     const zero_or_more_parser = zero_or_more(parser);
@@ -100,8 +104,11 @@ const one_or_more = <R>(parser: Parser<R>) => {
     }
 }
 
-try { console.log(one_or_more(parse_alphanum)("e_ello")); } catch (e) { console.error(e) };
-
+// try { 
+//     console.log(one_or_more(parse_alphanum)("e_ello"));
+// } catch (e) { 
+//     console.error(e);
+// };
 
 const pair = <R1, R2>(parser1: Parser<R1>, parser2: Parser<R2>) => {
     return (input: string) => {
@@ -117,15 +124,6 @@ const map = <R1, R2>(parser: Parser<R1>, modifier: (res: R1) => R2) => {
         return { res: modifier(res), rem }
     }
 }
-
-try { 
-    const parser = map(pair(
-        parse_maj_alphanum,
-        one_or_more(parse_alphanum)
-    ), (res) => [res[0], ...res[1]].join(''));
-    console.log(parser("Hello"));
-} catch (e) { console.error(e) };
-
 
 // N caractères alphanum, N > 0
 const parser_mot = map(
@@ -155,7 +153,7 @@ const parser_debut_phrase = map(
         parser_mot_avec_majuscule,
         zero_or_more(parser_espacement_et_mot)
     ),
-    (res) => [res[0], ...res[1]]
+    (res: any[]) => [res[0], ...res[1]]
     // On combine le mot avec majuscule et les autres mots
 );
 

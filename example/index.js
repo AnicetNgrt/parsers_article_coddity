@@ -85,13 +85,11 @@ var zero_or_more = function (parser) {
         return { res: res_list, rem: next_input };
     };
 };
-try {
-    console.log(zero_or_more(parse_alphanum)("hello"));
-}
-catch (e) {
-    console.error(e);
-}
-;
+// try {
+//     console.log(zero_or_more(parse_alphanum)("hello"));
+// } catch (e) {
+//     console.error(e)
+// };
 var one_or_more = function (parser) {
     var zero_or_more_parser = zero_or_more(parser);
     return function (input) {
@@ -103,13 +101,11 @@ var one_or_more = function (parser) {
         };
     };
 };
-try {
-    console.log(one_or_more(parse_alphanum)("e_ello"));
-}
-catch (e) {
-    console.error(e);
-}
-;
+// try { 
+//     console.log(one_or_more(parse_alphanum)("e_ello"));
+// } catch (e) { 
+//     console.error(e);
+// };
 var pair = function (parser1, parser2) {
     return function (input) {
         var _a = parser1(input), res1 = _a.res, rem1 = _a.rem;
@@ -123,14 +119,6 @@ var map = function (parser, modifier) {
         return { res: modifier(res), rem: rem };
     };
 };
-try {
-    var parser = map(pair(parse_maj_alphanum, one_or_more(parse_alphanum)), function (res) { return __spreadArrays([res[0]], res[1]).join(''); });
-    console.log(parser("Hello"));
-}
-catch (e) {
-    console.error(e);
-}
-;
 // N caractères alphanum, N > 0
 var parser_mot = map(one_or_more(parse_alphanum), function (res) { return res.join(''); } // On recombine les lettres
 );

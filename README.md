@@ -4,19 +4,19 @@
 
 # L'orienté fonction en Typescript : Créons un parser
 
-Un parser est un traducteur. Un programme capable de prendre une information exprimée dans un format A, de la lire, de l'analyser, parfois même de l'enrichir, puis de rendre le tout dans un format B.
+Un *parser* est un traducteur. Un programme capable de prendre une information exprimée dans un format A, de la lire, de l'analyser, parfois même de l'enrichir, puis de rendre le tout dans un format B.
 
 Pensez aux langages de programmation, formats de fichiers, protocoles de communication. Tous dépendent d'une multitude de parsers successifs pour fonctionner, que ce soit pour la compilation, l'interprétation, l'analyse syntaxique, le formatage automatique, la  configuration, la correction orthographique... Nous utilisons constamment des programmes qui lisent du texte, identifient des motifs et en construisent des représentations internes qui peuvent être analysées.
 
 ## L'objectif
 
-Nous réaliserons un parser capable d'identifier une phrase (de façon simplifiée) et de renvoyer tout ses mots. 
+Nous réaliserons un parser capable d'identifier une phrase (de façon simplifiée) et de renvoyer tous ses mots. 
 
-Nous utiliserons la technique de "recursive descent" pour construire notre parser final, ce qui mettra en lumière quelques bonnes idées de la programmation orientée fonction, un paradigme complémentaire à l'orienté objet et que beaucoup de programmeurs ne connaissent malheureusement pas.
+Nous utiliserons la technique de *recursive descent* pour construire notre parser final, ce qui mettra en lumière quelques bonnes idées de la programmation orientée fonction, un paradigme complémentaire à l'orienté objet et que beaucoup de programmeurs ne connaissent malheureusement pas.
 
-Nous nous servirons du langage **Typescript**, basé sur Javascript. Il serait avisé d'utiliser un langage bien plus robuste en raison du caractère critique des parsers, mais la simplicité de Javascript et les types de Typescript vous permettront de mieux visualiser les structures pour faciliter une réimplémentation dans des langages plus performants et "stricts".
+Nous nous servirons du langage *Typescript*, basé sur *Javascript*. Il serait avisé d'utiliser un langage bien plus robuste en raison du caractère critique des parsers, mais la simplicité de *Javascript* et les types de *Typescript* vous permettront de mieux visualiser les structures pour faciliter une réimplémentation dans des langages plus performants et "stricts".
 
-Je mets cependant à votre disposition deux autres exemples de "recursive descent", un en orienté fonction avec [Rust](https://github.com/AnicetNgrt/parser_combinators) et l'autre en orienté objet avec [Java](https://github.com/AnicetNgrt/SentenceParserCombinators).
+Je mets cependant à votre disposition deux autres exemples de "recursive descent", un en orienté fonction avec [*Rust*](https://github.com/AnicetNgrt/parser_combinators) et l'autre en orienté objet avec [*Java*](https://github.com/AnicetNgrt/SentenceParserCombinators).
 
 # Implémentation
 
@@ -24,9 +24,9 @@ Je mets cependant à votre disposition deux autres exemples de "recursive descen
 
 ![formule phrase](res/2.png)
 
-Pour parser une phrase, il faut déjà identifier ce dont elle est composée. Dans notre cas ce sera d'**un ou plusieurs mots**, mots composés d'**un ou plusieurs caractères alphanumériques**, le premier commençant par **une majuscule**, le dernier finissant par un **point**, tous séparés d'**un espace**. 
+Pour parser une phrase, il faut déjà identifier ce dont elle est composée. Dans notre cas ce sera d'**un ou plusieurs mots**, mots composés d'**un ou plusieurs caractères alphanumériques**, le premier commençant par **une majuscule**, le dernier finissant par un **point**, tous séparés d'**un espace**.
 
-Nous allons nous limiter à ces quelques règles pour simplifier. Mais si vous souhaitez ajouter des règles de grammaire et de syntaxe avancées (par exemple : sujet, verbe, complément) je vous invite à vous renseigner sur les "parse tree", un outil complémentaire que je ne traiterai pas dans cet article.
+Nous allons nous limiter à ces quelques règles pour simplifier. Mais si vous souhaitez ajouter des règles de grammaire et de syntaxe avancées (par exemple : sujet, verbe, complément) je vous invite à vous renseigner sur les *parse trees*, une technique complémentaire que je ne traiterai pas dans cet article.
 
 Exemple de phrases valides selon nos critères :
 
@@ -59,14 +59,14 @@ Ce qui veut dire qu'on doit pouvoir parser :
 Et faire des opérations sur ces parsers :
 
 - répéter une ou plusieurs fois un parser (pour mot et espacement)
-- répéter zero ou plusieurs fois un parser (pour les premiers mots d'une phrase)
+- répéter zéro ou plusieurs fois un parser (pour les premiers mots d'une phrase)
 - combiner deux parsers (pour tous les `+`)
 
 ## Fonction parser
 
 ![sentence parser](res/3.png)
 
-Nous prenons une approche orientée fonction, donc chaque parser sera une fonction. Ces fonctions renverront le résultat du parsing appliqué au texte donné en entrée.
+Nous prenons une approche orientée fonction, donc chaque parser sera une fonction. Ces fonctions renverront le résultat du *parsing* appliqué au texte donné en entrée.
 
 ```ts
 const res = parse_phrase("Ma phrase."); // ["Ma", "phrase"]
@@ -141,9 +141,9 @@ Parfait ! C'était le plus simple, passons à la suite.
 
 ![parse char cond](res/4.png)
 
-Maintenant qu'on peut parser la présence d'un caractère, il faut vérifier certaines conditions dessus, par exemple si l'on veut parser un espace alors on doit regarder si c'est un espace, si l'on veut parser un point, si c'est un point et ainsi de suite...
+Maintenant qu'on peut parser la présence d'un caractère, il faut vérifier certaines conditions dessus, par exemple si l'on veut parser un espace alors on doit regarder si c'est un espace, si l'on veut parser un point, si c'est un point et ainsi de suite ...
 
-Notre premier instinct serait de faire une fonction qui parse un caractère puis essaye de valider une condition booléenne dessus. Cette condition serait une fonction prenant le caractère en question et renvoyant vrai ou faux. Si la condition passe on renverra le caractère, sinon on aura une exception.
+Notre premier instinct serait de faire une fonction qui parse un caractère puis essaye de valider une condition booléenne dessus. Cette condition serait une fonction prenant le caractère en question et renvoyant "vrai" ou "faux". Si la condition passe on renverra le caractère, sinon on aura une exception.
 
 ```ts
 type Condition<T> = (val: T) => boolean;
@@ -166,7 +166,7 @@ const parse_dot = input => parse_char_cond(input, c => c === ".");
 console.log(parse_dot(".hello")); // { res: '.', rem: 'hello' }
 ```
 
-Pour `parse_char_cond` on parle de "fonction du premier ordre", c'est à dire une fonction qui prend d'autres fonctions en paramètre. C'est très utile car ça permet de ne pas dupliquer de code entres les différents parsers conditionnels qu'on va devoir implémenter.
+Pour `parse_char_cond` on parle de *fonction du premier ordre*, c'est-à-dire une fonction qui prend d'autres fonctions en paramètre. C'est très utile car ça permet de ne pas dupliquer de code entre les différents parsers conditionnels qu'on va devoir implémenter.
 
 ## Functors
 
@@ -214,7 +214,7 @@ const cond_parser = <R>(parser: Parser<R>, cond: Condition<R>) => {
 }
 ```
 
-Lorsqu'une fonction en renvoie une autre on parle de "functor" ou foncteur en français. On peut voir ça comme l'équivalent d'une "factory" en orienté objet.
+Lorsqu'une fonction en renvoie une autre on parle de *functor* (ou *foncteur* en français). On peut voir ça comme l'équivalent d'une *factory* en orienté objet.
 
 Donc maintenant on peut réécrire notre parser de points comme ceci :
 
@@ -245,7 +245,7 @@ Vous voyez qu'avec cette technique nos parsers sont devenus très facilement com
 
 ![parsers répétés](res/6.png)
 
-Nous allons maintenant créer un functor qui, à partir d'un parser A, créé un parser B répétant A autant de fois que possible, renvoyant alors la liste de tous les résultats accumulés de A. Ce qui nous donnera la possibilité de répéter un parser zéro fois ou plus. Par exemple pour parser les caractères après la majuscule, comme indiqué dans la formule de départ.
+Nous allons maintenant créer un functor qui, à partir d'un parser A, créé un parser B répétant A autant de fois que possible, renvoyant alors la liste de tous les résultats accumulés du parser A. Ce qui nous donnera la possibilité de répéter un parser zéro fois ou plus. Par exemple pour parser les caractères après la majuscule, comme indiqué dans la formule de départ.
 
 ```ts
 const zero_or_more = <R>(parser: Parser<R>) => {
@@ -301,7 +301,7 @@ On évite encore une fois les répétitions en utilisant `zero_or_more` dans `on
 
 ## Parser combinator
 
-Il ne nous reste plus qu'un outil à créer, l'additionneuse de parsers, ou "parser combinator". Cette dernière va exécuter deux parsers à la suite en utilisant le reste du premier dans l'entrée du second. Il combinera les deux résultats dans une liste.
+Il ne nous reste plus qu'un outil à créer, l'additionneuse de parsers, qu'on appelle en réalité *parser combinator*. Cette dernière va exécuter deux parsers à la suite en injectant le reste du premier dans le second. Il combinera les deux résultats dans une liste.
 
 ```ts
 const pair = <R1, R2>(parser1: Parser<R1>, parser2: Parser<R2>) => {

@@ -121,7 +121,7 @@ Commençons par parser un unique caractère en le renvoyant en résultat :
 // Parse un caractère, renvoie le caractère et le reste de l'input
 // Si aucun caractère, erreur
 const parse_char = (input) => {
-    if (input.length < 0) {
+    if (input.length < 1) {
         throw new ParseError(input, "Expected a character, got nothing.");
     }
     

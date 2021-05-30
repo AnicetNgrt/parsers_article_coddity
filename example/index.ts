@@ -14,7 +14,7 @@ class ParseError extends Error {
 type Char = string; // Vive Typescript (le type char n'existe pas)
 
 const parse_char: Parser<Char> = (input) => {
-    if (input.length < 0) {
+    if (input.length < 1) {
         throw new ParseError(input, "Expected a character, got nothing.");
     }
     

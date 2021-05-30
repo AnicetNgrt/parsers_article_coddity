@@ -2,7 +2,7 @@
 
 *Toutes les illustrations sont de l'auteur.*
 
-# À la découverte des parsers
+# L'orienté fonction en Typescript : Créons un parser
 
 Un parser est un traducteur. Un programme capable de prendre une information exprimée dans un format A, de la lire, de l'analyser, parfois même de l'enrichir, puis de rendre le tout dans un format B.
 
@@ -14,13 +14,15 @@ Nous réaliserons un parser capable d'identifier une phrase (de façon simplifi�
 
 Nous utiliserons la technique de "recursive descent" pour construire notre parser final, ce qui mettra en lumière quelques bonnes idées de la programmation orientée fonction, un paradigme complémentaire à l'orienté objet et que beaucoup de programmeurs ne connaissent malheureusement pas.
 
-Nous nous servirons du langage **Typescript**, basé sur Javascript. Il faudrait normalement utiliser un langage plus bas-niveau en raison du caractère critique d'un tel outil, mais la simplicité de Javascript et les types de Typescript nous permettront de mieux visualiser les structures pour faciliter une réimplémentation dans des langages plus performants et "stricts".
+Nous nous servirons du langage **Typescript**, basé sur Javascript. Il serait avisé d'utiliser un langage bien plus robuste en raison du caractère critique des parsers, mais la simplicité de Javascript et les types de Typescript vous permettront de mieux visualiser les structures pour faciliter une réimplémentation dans des langages plus performants et "stricts".
 
 Je mets cependant à votre disposition deux autres exemples de "recursive descent", un en orienté fonction avec [Rust](https://github.com/AnicetNgrt/parser_combinators) et l'autre en orienté objet avec [Java](https://github.com/AnicetNgrt/SentenceParserCombinators).
 
 # Implémentation
 
 ## Formule d'une phrase
+
+![formule phrase](res/2.png)
 
 Pour parser une phrase, il faut déjà identifier ce dont elle est composée. Dans notre cas ce sera d'**un ou plusieurs mots**, mots composés d'**un ou plusieurs caractères alphanumériques**, le premier commençant par **une majuscule**, le dernier finissant par un **point**, tous séparés d'**un espace**. 
 
@@ -46,8 +48,6 @@ phrase = mot_maj + k*(char_espacement + mot) + "."
 
 n entier >= 1, k entier >= 0
 ```
-
-![formule phrase](res/2.png)
 
 Ce qui veut dire qu'on doit pouvoir parser :
 
@@ -313,7 +313,7 @@ const pair = <R1, R2>(parser1: Parser<R1>, parser2: Parser<R2>) => {
 }
 ```
 
-L'on veut aussi pouvoir modifier un petit peu ce résultat à l'aide d'une fonction. Par exemple dans le cas du mot avec une majuscule, combiner la majuscule avec les lettres suivantes pour reconstruir le mot initial.
+L'on veut aussi pouvoir modifier ce résultat par la suite. Par exemple dans le cas du mot avec une majuscule, combiner la majuscule avec les lettres suivantes pour reconstruire le mot initial.
 
 ```ts
 const map = <R1, R2>(parser: Parser<R1>, modifier: (res: R1) => R2) => {
@@ -383,4 +383,4 @@ parser_phrase("Je suis une phrase. Ensuite...");
 
 ![recursive descent](res/7.png)
 
-C'était long, mais au moins ~~maintenant vous pouvez vous passer des regex!~~
+C'était long, mais au moins maintenant vous pouvez vous passer de l'orienté objet et des expressions régulières !

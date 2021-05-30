@@ -111,10 +111,60 @@ const pair = <R1, R2>(parser1: Parser<R1>, parser2: Parser<R2>) => {
     }
 }
 
+const map = <R1, R2>(parser: Parser<R1>, modifier: (res: R1) => R2) => {
+    return (input: string) => {
+        const { res, rem } = parser(input);
+        return { res: modifier(res), rem }
+    }
+}
+
 try { 
-    const parser = pair(
+    const parser = map(pair(
         parse_maj_alphanum,
         one_or_more(parse_alphanum)
-    );
+    ), (res) => [res[0], ...res[1]].join(''));
     console.log(parser("Hello"));
+} catch (e) { console.error(e) };
+
+
+// N caractères alphanum, N > 0
+const parser_mot = map(
+    one_or_more(parse_alphanum),
+    (res) => res.join('') // On recombine les lettres
+);
+
+// espace + mot
+const parser_espacement_et_mot = map(
+    pair(parse_space, parser_mot),
+    (res) => res[1] // On rejette l'espace
+);
+
+// majuscule + K caractères alphanum, K >= 0
+const parser_mot_avec_majuscule = map(
+    pair(
+        parse_maj_alphanum,
+        zero_or_more(parse_alphanum)
+    ),
+    (res) => [res[0], ...res[1]].join('') 
+    // On recombine la majuscule et les lettres
+);
+
+// mot avec majuscule + M mots, M >= 0
+const parser_debut_phrase = map(
+    pair(
+        parser_mot_avec_majuscule,
+        zero_or_more(parser_espacement_et_mot)
+    ),
+    (res) => [res[0], ...res[1]]
+    // On combine le mot avec majuscule et les autres mots
+);
+
+// prise en compte du point final
+const parser_phrase = map(
+    pair(parser_debut_phrase, parse_dot),
+    (res) => res[0] // on ne garde que les mots
+);
+
+try {
+    console.log(parser_phrase("Je suis une phrase. Ensuite...")); 
 } catch (e) { console.error(e) };

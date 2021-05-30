@@ -117,9 +117,39 @@ var pair = function (parser1, parser2) {
         return { res: [res1, res2], rem: rem2 };
     };
 };
+var map = function (parser, modifier) {
+    return function (input) {
+        var _a = parser(input), res = _a.res, rem = _a.rem;
+        return { res: modifier(res), rem: rem };
+    };
+};
 try {
-    var parser = pair(parse_maj_alphanum, one_or_more(parse_alphanum));
+    var parser = map(pair(parse_maj_alphanum, one_or_more(parse_alphanum)), function (res) { return __spreadArrays([res[0]], res[1]).join(''); });
     console.log(parser("Hello"));
+}
+catch (e) {
+    console.error(e);
+}
+;
+// N caractères alphanum, N > 0
+var parser_mot = map(one_or_more(parse_alphanum), function (res) { return res.join(''); } // On recombine les lettres
+);
+// espace + mot
+var parser_espacement_et_mot = map(pair(parse_space, parser_mot), function (res) { return res[1]; } // On rejette l'espace
+);
+// majuscule + K caractères alphanum, K >= 0
+var parser_mot_avec_majuscule = map(pair(parse_maj_alphanum, zero_or_more(parse_alphanum)), function (res) { return __spreadArrays([res[0]], res[1]).join(''); }
+// On recombine la majuscule et les lettres
+);
+// mot avec majuscule + M mots, M >= 0
+var parser_debut_phrase = map(pair(parser_mot_avec_majuscule, zero_or_more(parser_espacement_et_mot)), function (res) { return __spreadArrays([res[0]], res[1]); }
+// On combine le mot avec majuscule et les autres mots
+);
+// prise en compte du point final
+var parser_phrase = map(pair(parser_debut_phrase, parse_dot), function (res) { return res[0]; } // on ne garde que les mots
+);
+try {
+    console.log(parser_phrase("Je suis une phrase. Ensuite..."));
 }
 catch (e) {
     console.error(e);

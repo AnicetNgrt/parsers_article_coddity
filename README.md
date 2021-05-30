@@ -20,7 +20,7 @@ Je mets cependant à votre disposition deux autres exemples de "recursive descen
 
 # Implémentation
 
-## 0. Formule d'une phrase
+## Formule d'une phrase
 
 Pour parser une phrase, il faut déjà identifier ce dont elle est composée. Dans notre cas ce sera d'**un ou plusieurs mots**, mots composés d'**un ou plusieurs caractères alphanumériques**, le premier commençant par **une majuscule**, le dernier finissant par un **point**, tous séparés d'**un espace**. 
 
@@ -62,7 +62,9 @@ Et faire des opérations sur ces parsers :
 - répéter zero ou plusieurs fois un parser (pour les premiers mots d'une phrase)
 - combiner deux parsers (pour tous les `+`)
 
-## 1. Fonction parser
+## Fonction parser
+
+![sentence parser](res/3.png)
 
 Nous prenons une approche orientée fonction, donc chaque parser sera une fonction. Ces fonctions renverront le résultat du parsing appliqué au texte donné en entrée.
 
@@ -111,9 +113,7 @@ class ParseError extends Error {
 }
 ```
 
-![sentence parser](res/3.png)
-
-## 2. Parsers de base
+## Parsers de départ
 
 Commençons par parser un unique caractère en le renvoyant en résultat :
 
@@ -132,16 +132,18 @@ const parse_char = (input) => {
 }
 
 const { res, rem } = parse_char("Hello");
-console.log(res, rem); // H ello
+// { res: 'H', rem: 'ello' }
 ```
 
-## 3. Fonctions du premier ordre
+Parfait ! C'était le plus simple, passons à la suite.
+
+## Fonctions du premier ordre
+
+![parse char cond](res/4.png)
 
 Maintenant qu'on peut parser la présence d'un caractère, il faut vérifier certaines conditions dessus, par exemple si l'on veut parser un espace alors on doit regarder si c'est un espace, si l'on veut parser un point, si c'est un point et ainsi de suite...
 
 Notre premier instinct serait de faire une fonction qui parse un caractère puis essaye de valider une condition booléenne dessus. Cette condition serait une fonction prenant le caractère en question et renvoyant vrai ou faux. Si la condition passe on renverra le caractère, sinon on aura une exception.
-
-![parse char cond](res/4.png)
 
 ```ts
 type Condition<T> = (val: T) => boolean;
@@ -166,7 +168,9 @@ console.log(parse_dot(".hello")); // { res: '.', rem: 'hello' }
 
 Pour `parse_char_cond` on parle de "fonction du premier ordre", c'est à dire une fonction qui prend d'autres fonctions en paramètre. C'est très utile car ça permet de ne pas dupliquer de code entres les différents parsers conditionnels qu'on va devoir implémenter.
 
-## 4. Functors
+## Functors
+
+![constructeur de parser conditionnel](res/5.png)
 
 Le code écrit jusqu'ici n'est pas si bien. Imaginez un instant que vous vouliez ensuite faire un parser qui valide une condition sur autre chose qu'un caractère. Par exemple si maintenant vous vouliez parser un mot et en plus valider que ce mot a une majuscule, alors vous devriez réécrire une logique très semblable mais en remplaçant `parse_char` par `parse_word` (supposons qu'elle existe).
 
@@ -210,8 +214,6 @@ const cond_parser = <R>(parser: Parser<R>, cond: Condition<R>) => {
 }
 ```
 
-![constructeur de parser conditionnel](res/5.png)
-
 Lorsqu'une fonction en renvoie une autre on parle de "functor". On peut voir ça comme l'équivalent d'une "factory" en orienté objet.
 
 Donc maintenant on peut réécrire notre parser de points comme ceci :
@@ -239,7 +241,7 @@ const parse_maj_alphanum = cond_parser(parse_alphanum, is_maj);
 
 Vous voyez qu'avec cette technique nos parsers sont devenus très facilement composables. Regardez comme on utilise `parse_alphanum` pour construire `parse_maj_alphanum`. Ce qui forme une chaîne de parsers `parse_char -> parse_alphanum -> parse_maj_alphanum` où on ajoute simplement une nouvelle condition à chaque étape. Donc tout se compose très naturellement.
 
-## 5. Parsers répétés
+## Parsers répétés
 
 ![parsers répétés](res/6.png)
 
@@ -297,13 +299,9 @@ const one_or_more = <R>(parser: Parser<R>) => {
 
 On évite encore une fois les répétitions en utilisant `zero_or_more` dans `one_or_more`.
 
-## 6. Parser combinator
+## Parser combinator
 
-Il ne nous reste plus qu'un outil à créer, l'additionneuse de parsers, ou "parser combinator". Cette dernière va exécuter deux parsers à la suite en utilisant le reste du premier dans l'entrée du second.
-
-Dans le vaste monde des parser combinators, il existe plusieurs variantes : Une nommée "pair parser" qui renvoie le résultat combiné des deux, une autre nommée "left parser" qui renvoie uniquement le résultat du premier et une dernière nommée "right parser" qui renvoie uniquement le résultat du second.
-
-Dans notre cas si l'on parse le premier mot de la phrase à l'aide d'un parser de majuscule additionné à un parseur répété de caractères l'on voudra combiner les deux résultats pour obtenir le mot final. C'est pourquoi l'on utilisera la variante "pair".
+Il ne nous reste plus qu'un outil à créer, l'additionneuse de parsers, ou "parser combinator". Cette dernière va exécuter deux parsers à la suite en utilisant le reste du premier dans l'entrée du second. Il combinera les deux résultats dans une liste.
 
 ```ts
 const pair = <R1, R2>(parser1: Parser<R1>, parser2: Parser<R2>) => {
@@ -314,3 +312,75 @@ const pair = <R1, R2>(parser1: Parser<R1>, parser2: Parser<R2>) => {
     }
 }
 ```
+
+L'on veut aussi pouvoir modifier un petit peu ce résultat à l'aide d'une fonction. Par exemple dans le cas du mot avec une majuscule, combiner la majuscule avec les lettres suivantes pour reconstruir le mot initial.
+
+```ts
+const map = <R1, R2>(parser: Parser<R1>, modifier: (res: R1) => R2) => {
+    return (input: string) => {
+        const { res, rem } = parser(input);
+        return { res: modifier(res), rem }
+    }
+}
+```
+
+## Parser de phrase
+
+Maintenant qu'on a tous nos blocs, l'on peut construire le parser final en nous aidant de la définition établie précédemment.
+
+```ts
+// N caractères alphanum, N > 0
+const parser_mot = map(
+    one_or_more(parse_alphanum),
+    (res) => res.join('') // On combine les lettres
+);
+
+// espace + mot
+const parser_espacement_et_mot = map(
+    pair(parse_space, parser_mot),
+    (res) => res[1] // On rejette l'espace
+);
+
+// majuscule + K caractères alphanum, K >= 0
+const parser_mot_avec_majuscule = map(
+    pair(
+        parse_maj_alphanum,
+        zero_or_more(parse_alphanum)
+    ),
+    (res) => [res[0], ...res[1]].join('') 
+    // On combine la majuscule et les lettres
+);
+```
+
+Et finalement le parser de phrase qu'on sépare en deux pour la lisibilité :
+
+```ts
+// partie 1 : mot avec majuscule + M mots, M >= 0
+const parser_debut_phrase = map(
+    pair(
+        parser_mot_avec_majuscule,
+        zero_or_more(parser_espacement_et_mot)
+    ),
+    (res) => [res[0], ...res[1]]
+    // On combine le mot avec majuscule et les autres mots
+);
+
+// partie 2 : prise en compte du point final
+const parser_phrase = map(
+    pair(parser_debut_phrase, parse_dot),
+    (res) => res[0] // on ne garde que les mots
+);
+```
+
+Mission accomplie !
+
+```ts
+parser_phrase("Je suis une phrase. Ensuite...");
+// { res: [ 'Je', 'suis', 'une', 'phrase' ], rem: ' Ensuite...' }
+```
+
+# Conclusion
+
+![recursive descent](res/7.png)
+
+C'était long, mais au moins ~~maintenant vous pouvez vous passer des regex!~~

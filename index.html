@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/*
+
+Atom One Dark by Daniel Gamage
+Original One Dark Syntax theme from https://github.com/atom/one-dark-syntax
+
+base:    #282c34
+mono-1:  #abb2bf
+mono-2:  #818896
+mono-3:  #5c6370
+hue-1:   #56b6c2
+hue-2:   #61aeee
+hue-3:   #c678dd
+hue-4:   #98c379
+hue-5:   #e06c75
+hue-5-2: #be5046
+hue-6:   #d19a66
+hue-6-2: #e6c07b
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #abb2bf;
+  background: #282c34;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #5c6370;
+  font-style: italic;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+  color: #c678dd;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+  color: #e06c75;
+}
+
+.hljs-literal {
+  color: #56b6c2;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string {
+  color: #98c379;
+}
+
+.hljs-built_in,
+.hljs-class .hljs-title {
+  color: #e6c07b;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #d19a66;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #61aeee;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  text-decoration: underline;
+}
+
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p><img src="res/1.png" alt="parser_illustré"></p>
+<p><em>Toutes les illustrations sont de l'auteur.</em></p>
+<h1 id="lorient%C3%A9-fonction-en-typescript--cr%C3%A9ons-un-parser">L'orienté fonction en Typescript : Créons un parser</h1>
+<p>Un <em>parser</em> est un traducteur. Un programme capable de prendre une information exprimée dans un format A, de la lire, de l'analyser, parfois même de l'enrichir, puis de rendre le tout dans un format B.</p>
+<p>Pensez aux langages de programmation, formats de fichiers, protocoles de communication. Tous dépendent d'une multitude de parsers successifs pour fonctionner, que ce soit pour la compilation, l'interprétation, l'analyse syntaxique, le formatage automatique, la  configuration, la correction orthographique... Nous utilisons constamment des programmes qui lisent du texte, identifient des motifs et en construisent des représentations internes qui peuvent être analysées.</p>
+<h2 id="lobjectif">L'objectif</h2>
+<p>Nous réaliserons un parser capable d'identifier une phrase (de façon simplifiée) et de renvoyer tous ses mots.</p>
+<p>Nous utiliserons la technique de <em>recursive descent</em> pour construire notre parser final, ce qui mettra en lumière quelques bonnes idées de la programmation orientée fonction, un paradigme complémentaire à l'orienté objet et que beaucoup de programmeurs ne connaissent malheureusement pas.</p>
+<p>Nous nous servirons du langage <em>Typescript</em>, basé sur <em>Javascript</em>. Il serait avisé d'utiliser un langage bien plus robuste en raison du caractère critique des parsers, mais la simplicité de <em>Javascript</em> et les types de <em>Typescript</em> vous permettront de mieux visualiser les structures pour faciliter une réimplémentation dans des langages plus performants et &quot;stricts&quot;.</p>
+<p>Je mets cependant à votre disposition deux autres exemples de &quot;recursive descent&quot;, un en orienté fonction avec <a href="https://github.com/AnicetNgrt/parser_combinators"><em>Rust</em></a> et l'autre en orienté objet avec <a href="https://github.com/AnicetNgrt/SentenceParserCombinators"><em>Java</em></a>.</p>
+<h1 id="impl%C3%A9mentation">Implémentation</h1>
+<h2 id="formule-dune-phrase">Formule d'une phrase</h2>
+<p><img src="res/2.png" alt="formule phrase"></p>
+<p>Pour parser une phrase, il faut déjà identifier ce dont elle est composée. Dans notre cas ce sera d'<strong>un ou plusieurs mots</strong>, mots composés d'<strong>un ou plusieurs caractères alphanumériques</strong>, le premier commençant par <strong>une majuscule</strong>, le dernier finissant par un <strong>point</strong>, tous séparés d'<strong>un espace</strong>.</p>
+<p>Nous allons nous limiter à ces quelques règles pour simplifier. Mais si vous souhaitez ajouter des règles de grammaire et de syntaxe avancées (par exemple : sujet, verbe, complément) je vous invite à vous renseigner sur les <em>parse trees</em>, une technique complémentaire que je ne traiterai pas dans cet article.</p>
+<p>Exemple de phrases valides selon nos critères :</p>
+<pre class="hljs"><code><div>Je suis une phrase.     -&gt; valide, resultat: [&quot;Je&quot;, &quot;suis&quot;, &quot;une&quot;, &quot;phrase&quot;]
+Je.                     -&gt; valide, resultat: [&quot;Je&quot;]
+je.                     -&gt; incorrect
+Je                      -&gt; incorrect
+Je suis une phrase .    -&gt; incorrect
+Je   suis une  phrase.  -&gt; incorrect
+</div></code></pre>
+<p>On en déduit la formule pseudo-mathématique d'une &quot;phrase&quot; :</p>
+<pre class="hljs"><code><div>mot = n*char_alphanum
+mot_maj = char_alphanum_maj + k*char_alphanum
+phrase = mot_maj + k*(char_espacement + mot) + <span class="hljs-string">"."</span>  
+
+n entier &gt;= <span class="hljs-number">1</span>, k entier &gt;= <span class="hljs-number">0</span>
+</div></code></pre>
+<p>Ce qui veut dire qu'on doit pouvoir parser :</p>
+<ul>
+<li>un caractère <code>&quot;.&quot;</code></li>
+<li>un caractère alphanumérique (<code>a</code>, <code>b</code>, <code>c</code> ... <code>8</code>, <code>9</code>, <code>0</code>)</li>
+<li>un caractère alphanumérique en majuscule</li>
+<li>un caractère considéré comme un espace (<code>&quot; &quot;</code>, <code>&quot;\n&quot;</code> ...)</li>
+</ul>
+<p>Et faire des opérations sur ces parsers :</p>
+<ul>
+<li>répéter une ou plusieurs fois un parser (pour mot et espacement)</li>
+<li>répéter zéro ou plusieurs fois un parser (pour les premiers mots d'une phrase)</li>
+<li>combiner deux parsers (pour tous les <code>+</code>)</li>
+</ul>
+<h2 id="fonction-parser">Fonction parser</h2>
+<p><img src="res/3.png" alt="sentence parser"></p>
+<p>Nous prenons une approche orientée fonction, donc chaque parser sera une fonction. Ces fonctions renverront le résultat du <em>parsing</em> appliqué au texte donné en entrée.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> res = parse_phrase(<span class="hljs-string">"Ma phrase."</span>); <span class="hljs-comment">// ["Ma", "phrase"]</span>
+</div></code></pre>
+<p>On voudra aussi renvoyer la partie pas traitée par le parser, pour pouvoir parser plusieurs fois à la suite.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> { res, rem } = parse_phrase(<span class="hljs-string">"Ma phrase1.Ma phrase2.suite"</span>);
+<span class="hljs-comment">// { res: ["Ma", "phrase1"], rem: "Ma phrase2.suite" }</span>
+
+<span class="hljs-keyword">const</span> { res, rem } = parse_phrase(rem);
+<span class="hljs-comment">// { res: ["Ma", "phrase2"], rem: "suite" }</span>
+</div></code></pre>
+<p>Dans le cas où l'entrée ne sera pas valide on renverra une exception.</p>
+<pre class="hljs"><code><div>parse_phrase(<span class="hljs-string">"  je ne suis pas une phrase"</span>);
+<span class="hljs-comment">// ParseError {</span>
+<span class="hljs-comment">//      reason: "unexpected whitespace",</span>
+<span class="hljs-comment">//      input: "  je ne suis pas une phrase"</span>
+<span class="hljs-comment">// }</span>
+</div></code></pre>
+<p>On en déduit déjà deux types :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">type</span> ParseResult&lt;R&gt; = {
+    res: R, <span class="hljs-comment">// "Traduction" trouvée par le parser</span>
+    rem: <span class="hljs-built_in">string</span> <span class="hljs-comment">// Reste à parser</span>
+};
+
+<span class="hljs-keyword">type</span> Parser&lt;R&gt; = <span class="hljs-function">(<span class="hljs-params">input: <span class="hljs-built_in">string</span></span>) =&gt;</span> ParseResult&lt;R&gt;;
+</div></code></pre>
+<p>Et une exception :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">class</span> ParseError <span class="hljs-keyword">extends</span> <span class="hljs-built_in">Error</span> {
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> input: <span class="hljs-built_in">string</span>, message?: <span class="hljs-built_in">string</span></span>) {
+        <span class="hljs-keyword">super</span>(message);
+    }
+}
+</div></code></pre>
+<h2 id="parsers-de-d%C3%A9part">Parsers de départ</h2>
+<p>Commençons par parser un unique caractère en le renvoyant en résultat :</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Parse un caractère, renvoie le caractère et le reste de l'input</span>
+<span class="hljs-comment">// Si aucun caractère, erreur</span>
+<span class="hljs-keyword">const</span> parse_char = <span class="hljs-function">(<span class="hljs-params">input</span>) =&gt;</span> {
+    <span class="hljs-keyword">if</span> (input.length &lt; <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ParseError(input, <span class="hljs-string">"Expected a character, got nothing."</span>);
+    }
+    
+    <span class="hljs-keyword">return</span> { 
+        res: input[<span class="hljs-number">0</span>], 
+        rem: input.substr(<span class="hljs-number">1</span>) 
+    }
+}
+
+<span class="hljs-keyword">const</span> { res, rem } = parse_char(<span class="hljs-string">"Hello"</span>);
+<span class="hljs-comment">// { res: 'H', rem: 'ello' }</span>
+</div></code></pre>
+<p>Parfait ! C'était le plus simple, passons à la suite.</p>
+<h2 id="fonctions-du-premier-ordre">Fonctions du premier ordre</h2>
+<p><img src="res/4.png" alt="parse char cond"></p>
+<p>Maintenant qu'on peut parser la présence d'un caractère, il faut vérifier certaines conditions dessus, par exemple si l'on veut parser un espace alors on doit regarder si c'est un espace, si l'on veut parser un point, si c'est un point et ainsi de suite ...</p>
+<p>Notre premier instinct serait de faire une fonction qui parse un caractère puis essaye de valider une condition booléenne dessus. Cette condition serait une fonction prenant le caractère en question et renvoyant &quot;vrai&quot; ou &quot;faux&quot;. Si la condition passe on renverra le caractère, sinon on aura une exception.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">type</span> Condition&lt;T&gt; = <span class="hljs-function">(<span class="hljs-params">val: T</span>) =&gt;</span> <span class="hljs-built_in">boolean</span>;
+
+<span class="hljs-comment">// Parser de char qui applique une condition</span>
+<span class="hljs-keyword">const</span> parse_char_cond = <span class="hljs-function">(<span class="hljs-params">input, cond: Condition&lt;<span class="hljs-built_in">string</span>&gt;</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> { res, rem } = parse_char(input);
+
+    <span class="hljs-keyword">if</span> (!cond(res)) {
+        <span class="hljs-comment">// Si la condition n'est pas validée, il y a erreur</span>
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ParseError(input);
+    }
+
+    <span class="hljs-keyword">return</span> { res, rem };
+}
+
+<span class="hljs-comment">// Notre parseur de points s'écrit maintenant en une seule ligne !</span>
+<span class="hljs-keyword">const</span> parse_dot = <span class="hljs-function"><span class="hljs-params">input</span> =&gt;</span> parse_char_cond(input, <span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c === <span class="hljs-string">"."</span>);
+
+<span class="hljs-built_in">console</span>.log(parse_dot(<span class="hljs-string">".hello"</span>)); <span class="hljs-comment">// { res: '.', rem: 'hello' }</span>
+</div></code></pre>
+<p>Pour <code>parse_char_cond</code> on parle de <em>fonction du premier ordre</em>, c'est-à-dire une fonction qui prend d'autres fonctions en paramètre. C'est très utile car ça permet de ne pas dupliquer de code entre les différents parsers conditionnels qu'on va devoir implémenter.</p>
+<h2 id="functors">Functors</h2>
+<p><img src="res/5.png" alt="constructeur de parser conditionnel"></p>
+<p>Le code écrit jusqu'ici n'est pas si bien. Imaginez un instant que vous vouliez ensuite faire un parser qui valide une condition sur autre chose qu'un caractère. Par exemple si maintenant vous vouliez parser un mot et en plus valider que ce mot a une majuscule, alors vous devriez réécrire une logique très semblable mais en remplaçant <code>parse_char</code> par <code>parse_word</code> (supposons qu'elle existe).</p>
+<p>On doit rajouter le parser à utiliser en argument et renommer la fonction <code>parse_char_cond</code> en <code>parse_cond</code> pour marquer le fait qu'on ne parsera plus nécessairement un caractère.</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Fonction qui prend deux fonctions en paramètre</span>
+<span class="hljs-comment">// Parse avec la première et filtre avec la seconde</span>
+<span class="hljs-keyword">const</span> parse_cond = &lt;R&gt;<span class="hljs-function">(<span class="hljs-params">input: <span class="hljs-built_in">string</span>, parser: Parser&lt;R&gt;, cond: Condition&lt;R&gt;</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> { res, rem } = parser(input);
+    <span class="hljs-keyword">if</span> (!cond(res)) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ParseError(input);
+    }
+    <span class="hljs-keyword">return</span> { res, rem }; 
+};
+
+<span class="hljs-keyword">const</span> parse_dot = <span class="hljs-function">(<span class="hljs-params">input</span>) =&gt;</span> parse_cond(
+    input,
+    parse_char,
+    <span class="hljs-function">(<span class="hljs-params">c</span>) =&gt;</span> c === <span class="hljs-string">"."</span>
+);
+</div></code></pre>
+<p>Mais on peut faire encore mieux.</p>
+<p>Plus tard, le parser de phrase va utiliser <code>parse_cond</code> de la même manière plusieurs fois. Par exemple pour chaque caractère de chaque mot il va appeler <code>parse_cond</code> avec le même parser <code>parse_char</code> et la même condition <code>is_alphanumeric</code>. Et même si le temps nécessaire à l'envoi d'une fonction dans une autre est négligeable, si l'on fait ça sur des textes de plusieurs millions de mots, on va répéter des millions de fois cet appel (on souhaite éviter les feux de datacenters à Strasbourg).</p>
+<p>Pour résoudre ce problème nous n'allons pas faire un parser, mais une fonction qui va construire des variantes de <code>parse_cond</code> qu'on pourra appeler ensuite sans repasser tous les arguments.</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// cond_parser renvoie une fonction.</span>
+<span class="hljs-comment">// C'est une sorte d'usine à fonctions.</span>
+<span class="hljs-keyword">const</span> cond_parser = &lt;R&gt;<span class="hljs-function">(<span class="hljs-params">parser: Parser&lt;R&gt;, cond: Condition&lt;R&gt;</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">input: <span class="hljs-built_in">string</span></span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> { res, rem } = parser(input);
+        <span class="hljs-keyword">if</span> (!cond(res)) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ParseError(input);
+        }
+        <span class="hljs-keyword">return</span> { res, rem };
+    }
+}
+</div></code></pre>
+<p>Lorsqu'une fonction en renvoie une autre on parle de <em>functor</em> (ou <em>foncteur</em> en français). On peut voir ça comme l'équivalent d'une <em>factory</em> en orienté objet.</p>
+<p>Donc maintenant on peut réécrire notre parser de points comme ceci :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> parse_dot = cond_parser(
+    parse_char,
+    <span class="hljs-function">(<span class="hljs-params">c</span>) =&gt;</span> c === <span class="hljs-string">"."</span>
+);
+
+<span class="hljs-keyword">const</span> { res, rem } = parse_dot(<span class="hljs-string">".hello"</span>);
+</div></code></pre>
+<p>Et pour parser les autres types de caractères qui nous intéressent :</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> is_whitespace = <span class="hljs-function"><span class="hljs-params">str</span> =&gt;</span> str.trim() === <span class="hljs-string">''</span>;
+<span class="hljs-keyword">const</span> is_alphanum = <span class="hljs-function"><span class="hljs-params">str</span> =&gt;</span> str.match(<span class="hljs-regexp">/^[\p{sc=Latn}\p{Nd}]+$/u</span>);
+<span class="hljs-keyword">const</span> is_maj = <span class="hljs-function"><span class="hljs-params">str</span> =&gt;</span> str === str.toUpperCase();
+
+<span class="hljs-keyword">const</span> parse_space = cond_parser(parse_char, is_whitespace);
+<span class="hljs-keyword">const</span> parse_alphanum = cond_parser(parse_char, is_alphanum);
+<span class="hljs-keyword">const</span> parse_maj_alphanum = cond_parser(parse_alphanum, is_maj);
+</div></code></pre>
+<p>Vous voyez qu'avec cette technique nos parsers sont devenus très facilement composables. Regardez comme on utilise <code>parse_alphanum</code> pour construire <code>parse_maj_alphanum</code>. Ce qui forme une chaîne de parsers <code>parse_char -&gt; parse_alphanum -&gt; parse_maj_alphanum</code> où on ajoute simplement une nouvelle condition à chaque étape. Donc tout se compose très naturellement.</p>
+<h2 id="parsers-r%C3%A9p%C3%A9t%C3%A9s">Parsers répétés</h2>
+<p><img src="res/6.png" alt="parsers répétés"></p>
+<p>Nous allons maintenant créer un functor qui, à partir d'un parser A, créé un parser B répétant A autant de fois que possible, renvoyant alors la liste de tous les résultats accumulés du parser A. Ce qui nous donnera la possibilité de répéter un parser zéro fois ou plus. Par exemple pour parser les caractères après la majuscule, comme indiqué dans la formule de départ.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> zero_or_more = &lt;R&gt;<span class="hljs-function">(<span class="hljs-params">parser: Parser&lt;R&gt;</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">input: <span class="hljs-built_in">string</span></span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> res_list = [];
+
+        <span class="hljs-keyword">let</span> next_input = input;
+        <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+            <span class="hljs-keyword">try</span> {
+                <span class="hljs-keyword">const</span> { res, rem } = parser(next_input);
+                res_list.push(res);
+                next_input = rem;
+                <span class="hljs-comment">// Si il n'y a plus rien à parser on s'arrête</span>
+                <span class="hljs-keyword">if</span> (next_input === <span class="hljs-string">''</span>) {
+                    <span class="hljs-keyword">break</span>;
+                }
+            <span class="hljs-comment">// Si ça ne marche plus on s'arrête</span>
+            } <span class="hljs-keyword">catch</span>(ignored) {
+                <span class="hljs-keyword">break</span>;
+            }
+        }
+        <span class="hljs-keyword">return</span> { res: res_list, rem: next_input };
+    }
+}
+</div></code></pre>
+<p>Ce qui nous donne par exemple :</p>
+<pre class="hljs"><code><div>zero_or_more(parse_alphanum)(<span class="hljs-string">"hello"</span>);
+<span class="hljs-comment">// { res: [ 'h', 'e', 'l', 'l', 'o' ], rem: '' }</span>
+zero_or_more(parse_maj_alphanum)(<span class="hljs-string">"HEllo"</span>);
+<span class="hljs-comment">// { res: [ 'H', 'E' ], rem: 'llo' }</span>
+</div></code></pre>
+<p>À partir de ce <code>zero_or_more</code> on crée ensuite un <code>one_or_more</code> qui va répéter un parser comme <code>zero_or_more</code> mais qui va planter si ça ne marche pas au moins une fois.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> one_or_more = &lt;R&gt;<span class="hljs-function">(<span class="hljs-params">parser: Parser&lt;R&gt;</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> zero_or_more_parser = zero_or_more(parser);
+    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">input: <span class="hljs-built_in">string</span></span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> { res, rem } = parser(input);
+        <span class="hljs-keyword">const</span> { res: res_list, rem: final_rem } = zero_or_more_parser(rem);
+        <span class="hljs-keyword">return</span> { 
+            res: [res, ...res_list], 
+            rem: final_rem 
+        };
+    }
+}
+</div></code></pre>
+<p>On évite encore une fois les répétitions en utilisant <code>zero_or_more</code> dans <code>one_or_more</code>.</p>
+<h2 id="parser-combinator">Parser combinator</h2>
+<p>Il ne nous reste plus qu'un outil à créer, l'additionneuse de parsers, qu'on appelle en réalité <em>parser combinator</em>. Cette dernière va exécuter deux parsers à la suite en injectant le reste du premier dans le second. Il combinera les deux résultats dans une liste.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> pair = &lt;R1, R2&gt;<span class="hljs-function">(<span class="hljs-params">parser1: Parser&lt;R1&gt;, parser2: Parser&lt;R2&gt;</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">input: <span class="hljs-built_in">string</span></span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> { res: res1, rem: rem1 } = parser1(input);
+        <span class="hljs-keyword">const</span> { res: res2, rem: rem2 } = parser2(rem1);
+        <span class="hljs-keyword">return</span> { res: [res1, res2], rem: rem2 }
+    }
+}
+</div></code></pre>
+<p>L'on veut aussi pouvoir modifier ce résultat par la suite. Par exemple dans le cas du mot avec une majuscule, combiner la majuscule avec les lettres suivantes pour reconstruire le mot initial.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> map = &lt;R1, R2&gt;<span class="hljs-function">(<span class="hljs-params">parser: Parser&lt;R1&gt;, modifier: (<span class="hljs-params">res: R1</span>) =&gt; R2</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">input: <span class="hljs-built_in">string</span></span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> { res, rem } = parser(input);
+        <span class="hljs-keyword">return</span> { res: modifier(res), rem }
+    }
+}
+</div></code></pre>
+<h2 id="parser-de-phrase">Parser de phrase</h2>
+<p>Maintenant qu'on a tous nos blocs, l'on peut construire le parser final en nous aidant de la définition établie précédemment.</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// N caractères alphanum, N &gt; 0</span>
+<span class="hljs-keyword">const</span> parser_mot = map(
+    one_or_more(parse_alphanum),
+    <span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res.join(<span class="hljs-string">''</span>) <span class="hljs-comment">// On combine les lettres</span>
+);
+
+<span class="hljs-comment">// espace + mot</span>
+<span class="hljs-keyword">const</span> parser_espacement_et_mot = map(
+    pair(parse_space, parser_mot),
+    <span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res[<span class="hljs-number">1</span>] <span class="hljs-comment">// On rejette l'espace</span>
+);
+
+<span class="hljs-comment">// majuscule + K caractères alphanum, K &gt;= 0</span>
+<span class="hljs-keyword">const</span> parser_mot_avec_majuscule = map(
+    pair(
+        parse_maj_alphanum,
+        zero_or_more(parse_alphanum)
+    ),
+    <span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> [res[<span class="hljs-number">0</span>], ...res[<span class="hljs-number">1</span>]].join(<span class="hljs-string">''</span>) 
+    <span class="hljs-comment">// On combine la majuscule et les lettres</span>
+);
+</div></code></pre>
+<p>Et finalement le parser de phrase qu'on sépare en deux pour la lisibilité :</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// partie 1 : mot avec majuscule + M mots, M &gt;= 0</span>
+<span class="hljs-keyword">const</span> parser_debut_phrase = map(
+    pair(
+        parser_mot_avec_majuscule,
+        zero_or_more(parser_espacement_et_mot)
+    ),
+    <span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> [res[<span class="hljs-number">0</span>], ...res[<span class="hljs-number">1</span>]]
+    <span class="hljs-comment">// On combine le mot avec majuscule et les autres mots</span>
+);
+
+<span class="hljs-comment">// partie 2 : prise en compte du point final</span>
+<span class="hljs-keyword">const</span> parser_phrase = map(
+    pair(parser_debut_phrase, parse_dot),
+    <span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res[<span class="hljs-number">0</span>] <span class="hljs-comment">// on ne garde que les mots</span>
+);
+</div></code></pre>
+<p>Mission accomplie !</p>
+<pre class="hljs"><code><div>parser_phrase(<span class="hljs-string">"Je suis une phrase. Ensuite..."</span>);
+<span class="hljs-comment">// { res: [ 'Je', 'suis', 'une', 'phrase' ], rem: ' Ensuite...' }</span>
+</div></code></pre>
+<h1 id="conclusion">Conclusion</h1>
+<p><img src="res/7.png" alt="recursive descent"></p>
+<p>C'était long, mais au moins maintenant vous pouvez vous passer de l'orienté objet <s>et des expressions régulières</s> !</p>
+
+</body>
+</html>

@@ -16,7 +16,7 @@ Nous utiliserons la technique de *recursive descent* pour construire notre parse
 
 Nous nous servirons du langage *Typescript*, basé sur *Javascript*. Il serait avisé d'utiliser un langage bien plus robuste en raison du caractère critique des parsers, mais la simplicité de *Javascript* et les types de *Typescript* vous permettront de mieux visualiser les structures pour faciliter une réimplémentation dans des langages plus performants et "stricts".
 
-Je mets cependant à votre disposition deux autres exemples de "recursive descent", un en orienté fonction avec [*Rust*](https://github.com/AnicetNgrt/parser_combinators) et l'autre en orienté objet avec [*Java*](https://github.com/AnicetNgrt/SentenceParserCombinators).
+Je mets cependant à votre disposition deux autres exemples de *recursive descent*, un en orienté fonction avec [*Rust*](https://github.com/AnicetNgrt/parser_combinators) et l'autre en orienté objet avec [*Java*](https://github.com/AnicetNgrt/SentenceParserCombinators).
 
 # Implémentation
 

@@ -214,7 +214,7 @@ const cond_parser = <R>(parser: Parser<R>, cond: Condition<R>) => {
 }
 ```
 
-Lorsqu'une fonction en renvoie une autre on parle de "functor". On peut voir ça comme l'équivalent d'une "factory" en orienté objet.
+Lorsqu'une fonction en renvoie une autre on parle de "functor" ou foncteur en français. On peut voir ça comme l'équivalent d'une "factory" en orienté objet.
 
 Donc maintenant on peut réécrire notre parser de points comme ceci :
 
@@ -383,4 +383,4 @@ parser_phrase("Je suis une phrase. Ensuite...");
 
 ![recursive descent](res/7.png)
 
-C'était long, mais au moins maintenant vous pouvez vous passer de l'orienté objet et des expressions régulières !
+C'était long, mais au moins maintenant vous pouvez vous passer de l'orienté objet ~~et des expressions régulières~~ !
